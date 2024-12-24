@@ -1,18 +1,28 @@
 
 buildscript {
+
+        ext.kotlin_version = '1.8.0'
+
+
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0' // Adjust based on your Flutter version
+        classpath 'com.android.tools.build:gradle:8.0.2' // Check your Flutter docs for compatibility
     }
 }
 allprojects {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url "https://maven.aliyun.com/repository/public"
+        }
+        maven {
+            url "https://maven.xiaomi.com/repository/maven-public/"
+        }
     }
 }
 

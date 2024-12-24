@@ -1,11 +1,16 @@
 import 'package:chat_app/controller/firebase/firebaseHelper.dart';
+import 'package:chat_app/controller/get_chat_room_controller.dart';
+import 'package:chat_app/model/chat_room_model.dart';
 import 'package:chat_app/model/user_model.dart';
 import 'package:chat_app/utils/utils.dart';
+import 'package:chat_app/views/all_users.dart';
 import 'package:chat_app/views/chat_screen.dart';
 import 'package:chat_app/views/login_screen.dart';
+import 'package:chat_app/views/my_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -14,8 +19,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late ChatRoomModel chatRoomModel;
+  GetChatRoomController chatRoomController=GetChatRoomController();
   var searchController=TextEditingController();
+  final fireBaseUser=FirebaseAuth.instance.currentUser;
+  late final UserModel userModel;
 
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserInfo();
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -26,41 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
           backgroundColor: Colors.blue,
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            FutureBuilder(
-                future: FirebaseHelper.getUserProfile(),
-                builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-    return Center(child: CircularProgressIndicator());
-    } else if (snapshot.hasData) {
-      // Access the profile data
-      Map<String, dynamic> profileData = snapshot.data as Map<String, dynamic>;
-      return UserAccountsDrawerHeader(
-
-        accountName: Text(profileData['fullName'].toString()),
-        accountEmail: Text(profileData['email'].toString()),
-        currentAccountPicture: CircleAvatar(
-          backgroundImage: NetworkImage(profileData['profilePic'].toString()),
-        ),
-      );
-    } else{
-      return Text('No Data Found');
-    }
-    },
-            ),
-            ElevatedButton(onPressed: (){
-              Utils.logoutDialog(context);
-            },
-                child: Text('Logout',style: TextStyle(color: Colors.white,fontSize: 19),),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.deepPurple
-            ),
-            )
-          ],
-        ),
-      ),
+      drawer: myDrawer(context),
       body: SingleChildScrollView(
         child: Column(
         
@@ -90,43 +71,77 @@ class _HomeScreenState extends State<HomeScreen> {
                ),
              ),
            ),
-            StreamBuilder(
-                stream: FirebaseFirestore.instance.collection('Users').snapshots(),
-                builder: (context, snapshot) {
-                  if(snapshot.connectionState == ConnectionState.waiting)
-                    {
-                      return Center(child: CircularProgressIndicator());
-                    }else if(!snapshot.hasData)
-                      {
-                        return Text('No any Users');
-                      }else
-                        {
-                          final docs = snapshot.data!.docs;
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: docs.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 9, 2, 8),
-                                  child: ListTile(
-                                    onTap: (){
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(),));
-                                    },
-                                    leading: CircleAvatar(
-                                      radius: 40,
-                                      backgroundImage: NetworkImage(docs[index]['profilePic'].toString()),
-                                    ),
-                                    title: Text(docs[index]['fullName'].toString()),
-                                  ),
-                                );
-                              },);
-                        }
-                },
+            FutureBuilder<List<UserModel>>(
+              future:FirebaseHelper.fetchAllUsers(),
+              builder: (context, snapshot) {
+                if(snapshot.connectionState == ConnectionState.waiting)
+                {
+                  return Center(child: CircularProgressIndicator());
+                }else if(!snapshot.hasData)
+                {
+                  return Text('No any Users');
+                }else
+                {
+                  final users = snapshot.data!;
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: users.length,
+                    itemBuilder: (context, index) {
+                      final user=users[index];
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 9, 2, 8),
+                        child: ListTile(
+                          onTap: () async {
+                        ChatRoomModel? chatRoom=  await chatRoomController.
+                        getChatRoom(user, userModel);
+                        chatRoomModel=chatRoom!;
+                        if(chatRoom!=null)
+                          {
+
+                            Navigator.push(context, MaterialPageRoute(builder:
+                                (context) => ChatScreen(
+                              firebaseUser: fireBaseUser!,
+                              userModel: userModel,
+                              targetUser:user ,
+                              chatRoomModel:chatRoom! ,
+                            ),));
+
+                          }
+                          },
+                          leading: CircleAvatar(
+                            radius: 40,
+                            backgroundImage: NetworkImage(user.profilePic.toString()),
+                          ),
+                          title: Text(user.fullName.toString()),
+                        ),
+                      );
+                    },);
+                }
+              },
             )
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
+          onPressed: ()async{
+
+          /*//Get.to(AllUsers(chatRoomModel: chatRoomModel, userModel: userModel));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) {
+                  return AllUsers(chatRoomModel: chatRoomModel, userModel: userModel);
+                },));*/
+          },
+        child: Icon(Icons.add),
+      ),
     );
+    
+  }
+
+  void getUserInfo()async {
+    final userId=FirebaseAuth.instance.currentUser!.uid;
+  userModel =(await  FirebaseHelper.fetchUserInfo(userId))!;
+  print('Fuck Name: ${userModel.fullName}');
   }
 
 

@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "235787761557",
-    "project_id": "demo1-47460",
-    "storage_bucket": "demo1-47460.appspot.com"
+    "project_number": "502668603925",
+    "firebase_url": "https://tik-tok-ee83a-default-rtdb.firebaseio.com",
+    "project_id": "tik-tok-ee83a",
+    "storage_bucket": "tik-tok-ee83a.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:235787761557:android:3af49756d20939aa2de89c",
+        "mobilesdk_app_id": "1:502668603925:android:9965decf38bddebc36541c",
         "android_client_info": {
           "package_name": "com.example.chat_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "502668603925-hsruhaao7lh127leh1o0815jbi72dclk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyBPxsfxHIzUP2flClvM9T1tS2wpmGux8dE"
+          "current_key": "AIzaSyApqK4PE69cNBYvSfoTkndbLAUC4wBtYaw"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502668603925-hsruhaao7lh127leh1o0815jbi72dclk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "502668603925-bcucm90eh86720gif6arl5uofpdmmnqc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tikTok"
+              }
+            }
+          ]
         }
       }
     }

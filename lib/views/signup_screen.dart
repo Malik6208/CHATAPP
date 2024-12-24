@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'package:chat_app/controller/auth_controller/auth_controller.dart';
-import 'package:chat_app/controller/image_upload.dart';
+import 'package:chat_app/controller/pick_image.dart';
 import 'package:chat_app/utils/components/cBtn.dart';
 import 'package:chat_app/utils/components/cTextField.dart';
 import 'package:chat_app/utils/utils.dart';
 import 'package:chat_app/views/login_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -17,9 +18,9 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   static final fireStore=FirebaseFirestore.instance.collection('Users');
-  static File? _image=UploadImage.getFile;
+ PickImageController imageController=Get.put(PickImageController());
 
-
+AuthController authController=AuthController();
 
   var _nameController=TextEditingController();
   var _emailController=TextEditingController();
@@ -50,14 +51,19 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(height: 20,),
               Center(child: InkWell(
                 onTap: (){
-                  Utils.showDailog(context);
+                  Utils utils=Utils();
+                  utils.showDailog(context);
 
                 },
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage:_image!=null? FileImage(_image!):AssetImage('assets/icons/userpic.png'),
+                child:Obx(() {
+                  return  CircleAvatar(
+                    radius: 50,
+                    backgroundImage:imageController.imageUrl!=''?
+                    FileImage(File(imageController.imageUrl.toString()))
+                        :AssetImage('assets/icons/userpic.png'),
 
-                ),
+                  );
+                },)
               ),),
               const SizedBox(height: 20,),
               Form(
@@ -121,59 +127,23 @@ class _SignupScreenState extends State<SignupScreen> {
 
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 13),
-                    child: ValueListenableBuilder(
-                      valueListenable: notifier,
-                      builder: (context, value, child) {
-                        return  TextFormField(
-                          obscureText: notifier.value,
-                          controller: _cPasslController,
-                          decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.lock,),
-                              suffixIcon: InkWell(
-                                onTap: (){
-                                  notifier.value=!notifier.value!;
-                                },
-                                child:  Icon(
-                                    notifier.value? Icons.visibility_off_outlined
-                                        :Icons.visibility
-                                ),
-                              ),
-                              hintText: 'Password',
-                              labelText: "password",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10)
-                              )
 
-                          ),
-                          validator: (value){
-                            if(value==null || value.isEmpty)
-                            {
-                              return 'Please enter password';
-                            }
-                            return null;
-                          },
-                        );
-                      },
-
-                    ),
-                  ),
 
                 const SizedBox(height: 27,),
                  CustomButtom(
                      voidCallback: (){
+
                        setState(() {
 
                        });
                        onSubmit();
-                       Utils.loading();
-                       AuthController.signUp(
+
+                       authController.signUp(
                            context,
                            _nameController.text.toString(),
                            _emailController.text.toString(),
                            _passlController.text.toString(),
-                           _cPasslController.text.toString(),
+
                            _phoneController.text.toString()
                        );
 

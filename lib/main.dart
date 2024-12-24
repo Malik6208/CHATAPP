@@ -4,6 +4,8 @@ import 'package:chat_app/views/login_screen.dart';
 import 'package:chat_app/views/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart';
 import 'firebase_options.dart';
 
 void main() async{
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -34,6 +36,7 @@ class MyApp extends StatelessWidget {
           )
       ),
       home: const CheackUser(),
+      builder: EasyLoading.init(),
     );
   }
 }

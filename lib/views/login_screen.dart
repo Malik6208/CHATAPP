@@ -12,6 +12,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  AuthController authController=AuthController();
   var _emailController=TextEditingController();
   static ValueNotifier<bool> notifier=ValueNotifier(false);
   var _passController=TextEditingController();
@@ -94,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   CustomButtom(
                     voidCallback: (){
                       onSubmit();
-                      AuthController.login(context,
+                      authController.login(context,
                           _emailController.text.toString(),
                           _passController.text.toString());
                     },

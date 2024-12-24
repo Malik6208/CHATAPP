@@ -1,14 +1,16 @@
 import 'package:another_flushbar/flushbar.dart';
-import 'package:chat_app/controller/image_upload.dart';
+import 'package:chat_app/controller/pick_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../views/login_screen.dart';
 
 class Utils{
+  PickImageController imageController=Get.put(PickImageController());
   static fieldFocusChange(BuildContext context,FocusNode current,FocusNode next)
   {
     FocusScope.of(context).requestFocus(next);
@@ -60,7 +62,7 @@ static showToast(String msg)
   );
 }
 
-  static snackBar(BuildContext context,String message){
+   snackBar(BuildContext context,String message){
     return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message),
         backgroundColor: Colors.red,
@@ -74,7 +76,7 @@ static showToast(String msg)
       child: CircularProgressIndicator(),
     );
   }
-  static showDailog(BuildContext context)
+   showDailog(BuildContext context)
   {
     return showDialog(
         context: context,
@@ -87,7 +89,7 @@ static showToast(String msg)
                 ListTile(
                   onTap: (){
                     Navigator.pop(context);
-                    UploadImage.selctImage(ImageSource.gallery);
+                    imageController.selctImage(ImageSource.gallery);
                   },
                   leading: Icon(Icons.photo_album),
                   title: Text('Slect Image from gallery'),
@@ -95,7 +97,7 @@ static showToast(String msg)
                 ListTile(
                   onTap: (){
                   Navigator.pop(context);
-                  UploadImage.selctImage(ImageSource.camera);
+                  imageController.selctImage(ImageSource.camera);
                   },
                   leading: Icon(Icons.camera_alt),
                   title: Text('Slect Image from gallery'),

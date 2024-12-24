@@ -47,19 +47,23 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBPxsfxHIzUP2flClvM9T1tS2wpmGux8dE',
-    appId: '1:235787761557:android:3af49756d20939aa2de89c',
-    messagingSenderId: '235787761557',
-    projectId: 'demo1-47460',
-    storageBucket: 'demo1-47460.appspot.com',
+    apiKey: 'AIzaSyApqK4PE69cNBYvSfoTkndbLAUC4wBtYaw',
+    appId: '1:502668603925:android:9965decf38bddebc36541c',
+    messagingSenderId: '502668603925',
+    projectId: 'tik-tok-ee83a',
+    databaseURL: 'https://tik-tok-ee83a-default-rtdb.firebaseio.com',
+    storageBucket: 'tik-tok-ee83a.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBI37IzGu5J81Q4Ks5Z4eC_8SQz9zzGCAM',
-    appId: '1:235787761557:ios:b8f9e2b18c564dda2de89c',
-    messagingSenderId: '235787761557',
-    projectId: 'demo1-47460',
-    storageBucket: 'demo1-47460.appspot.com',
+    apiKey: 'AIzaSyC0z2G88HIlJ-O6l0QbKUSO5RMDsOk3Mw4',
+    appId: '1:502668603925:ios:63e57d0af213a94c36541c',
+    messagingSenderId: '502668603925',
+    projectId: 'tik-tok-ee83a',
+    databaseURL: 'https://tik-tok-ee83a-default-rtdb.firebaseio.com',
+    storageBucket: 'tik-tok-ee83a.appspot.com',
+    androidClientId: '502668603925-a1vhl0urepuetjieqob13ig7ccdmscal.apps.googleusercontent.com',
+    iosClientId: '502668603925-qob5gb9ald45pssbp9gisildg20smgt8.apps.googleusercontent.com',
     iosBundleId: 'com.example.chatApp',
   );
 
